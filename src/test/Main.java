@@ -1,3 +1,10 @@
+/**
+ * @author Noam Mandelbaum
+ * 207461674
+ * noam.mandelbaum@gmail.com
+ */
+
+
 package test;
 
 import static java.lang.System.out;
@@ -8,7 +15,6 @@ import primitives.*;
 
 /**
  * Test program for the 1st stage
- * @author Dan Zilberstein
  */
 public final class Main {
 
