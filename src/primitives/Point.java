@@ -15,6 +15,7 @@ public class Point {
 
     /**
      * Primary constructor for Point.
+     *
      * @param d1 value for x-axis.
      * @param d2 value for y-axis.
      * @param d3 value for z-axis.
@@ -25,6 +26,7 @@ public class Point {
 
     /**
      * Constructor to initialize Point based on Double3 object.
+     *
      * @param xyz the Double3 object containing x, y, and z values.
      */
     public Point(Double3 xyz) {
@@ -33,27 +35,19 @@ public class Point {
 
     /**
      * Compares two points for equality.
+     *
      * @param o the object to be compared for equality with this point.
      * @return true if the specified object is equal to this point; false otherwise.
      */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Point point)) return false;
-        return Objects.equals(_xyz, point._xyz);
-    }
-
-    /**
-     * Returns a hash code value for the point.
-     * @return a hash code value for this point.
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(_xyz);
+        return (o instanceof Point point) && _xyz.equals(point._xyz);
     }
 
     /**
      * Returns a string representation of the point.
+     *
      * @return a string representation of the point.
      */
     @Override
@@ -65,6 +59,7 @@ public class Point {
 
     /**
      * Adds a vector to this point to get a new point.
+     *
      * @param vec the vector to be added.
      * @return a new point that is the result of the addition.
      */
@@ -74,6 +69,7 @@ public class Point {
 
     /**
      * Subtracts another point from this point to get a new vector.
+     *
      * @param p the point to be subtracted.
      * @return a new vector that is the result of the subtraction.
      */
@@ -83,6 +79,7 @@ public class Point {
 
     /**
      * Calculates the squared distance between this point and another point.
+     *
      * @param p the other point.
      * @return the squared distance between this point and the specified point.
      */
@@ -94,6 +91,7 @@ public class Point {
 
     /**
      * Calculates the distance between this point and another point.
+     *
      * @param p the other point.
      * @return the distance between this point and the specified point.
      */

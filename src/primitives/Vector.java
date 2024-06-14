@@ -2,6 +2,8 @@ package primitives;
 
 import java.util.Objects;
 
+import static primitives.Util.isZero;
+
 
 /**
  * Represents a vector in a 3D space.
@@ -42,8 +44,7 @@ public class Vector extends Point {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Vector point)) return false;
-        return Objects.equals(_xyz, point._xyz);
+        return (o instanceof Vector vec) && super.equals(vec);
     }
 
     /**
@@ -87,9 +88,13 @@ public class Vector extends Point {
      * @param scalar the scalar value to multiply by.
      * @return a new vector that is the result of the scalar multiplication.
      */
-    public Vector scale(double scalar) {
+    public Vector scale(double scalar){
+        if(isZero(scalar))
+            throw new IllegalArgumentException("cannot scale with 0");
         return new Vector(_xyz.scale(scalar));
     }
+
+
 
     /**
      * Computes the dot product of this vector and another vector.

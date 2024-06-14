@@ -30,6 +30,7 @@ public class Plane extends Geometry {
         this.normal = normal.normalize();
     }
 
+
     /**
      * Constructor to initialize the plane using three points.
      * This constructor calculates the normal vector based on the three points.
@@ -37,10 +38,25 @@ public class Plane extends Geometry {
      * @param p1 the first point.
      * @param p2 the second point.
      * @param p3 the third point.
+     * @throws IllegalArgumentException if the points are collinear or two of them are identical.
      */
     public Plane(Point p1, Point p2, Point p3) {
+        // Check for duplicate points
+        if (p1.equals(p2) || p1.equals(p3) || p2.equals(p3)) {
+            throw new IllegalArgumentException("Two or more points are identical");
+        }
+
+        // Check for collinear points
+        Vector u = p2.subtract(p1);
+        Vector v = p3.subtract(p1);
+        Vector cross = u.crossProduct(v);
+
+        if (cross.length() == 0) {
+            throw new IllegalArgumentException("Points are collinear");
+        }
+
         this.point = p1;
-        this.normal = null; //Needed implementation.
+        this.normal = cross.normalize();
     }
 
     /**

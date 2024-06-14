@@ -8,10 +8,14 @@ import java.util.Objects;
  */
 public class Ray {
 
-    /** The starting point of the ray. */
+    /**
+     * The starting point of the ray.
+     */
     private final Point p0;
 
-    /** The direction vector of the ray. */
+    /**
+     * The direction vector of the ray.
+     */
     private final Vector dir;
 
     /**
@@ -26,6 +30,25 @@ public class Ray {
         this.dir = dir.normalize();
     }
 
+
+    /**
+     * Returns the starting point of the ray.
+     *
+     * @return the starting point of the ray.
+     */
+    public Point getP0() {
+        return p0;
+    }
+
+    /**
+     * Returns the direction vector of the ray.
+     *
+     * @return the direction vector of the ray.
+     */
+    public Vector getDir() {
+        return dir;
+    }
+
     /**
      * Checks if this ray is equal to another object.
      *
@@ -35,18 +58,7 @@ public class Ray {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Ray ray)) return false;
-        return Objects.equals(p0, ray.p0) && Objects.equals(dir, ray.dir);
-    }
-
-    /**
-     * Computes a hash code for this ray.
-     *
-     * @return a hash code value for this ray.
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(p0, dir);
+        return (o instanceof Ray ray) && ray.p0.equals(p0) && ray.dir.equals(dir);
     }
 
     /**

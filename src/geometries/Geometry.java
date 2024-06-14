@@ -9,7 +9,6 @@ import primitives.Vector;
  * which is useful for finding intersection points with the surface of the object.
  */
 public abstract class Geometry {
-
     /**
      * Computes the normal vector to the geometry at the specified point.
      *
