@@ -27,14 +27,27 @@ public class Cylinder extends Tube {
         this.height = height;
     }
 
-    /**
-     * Calculates the normal vector to the cylinder at a given point.
-     *
-     * @param point the point on the surface of the cylinder where the normal is to be calculated.
-     * @return the normal vector to the cylinder at the given point.
-     */
     @Override
     public Vector getNormal(Point point) {
-        return null;
+        Point p0 = getAxisRay().getP0();
+        Vector dir = getAxisRay().getDir();
+
+        // Check if the point is on the bottom base
+        if (point.equals(p0)) {
+            return dir.scale(-1);
+        }
+
+        // Project point onto the cylinder's axis
+        double t = dir.dotProduct(point.subtract(p0));
+
+        // Check if the point is on the top or bottom base
+        if (t <= 0) {
+            return dir.scale(-1).normalize();
+        } else if (t >= height) {
+            return dir.normalize();
+        } else {
+            // Point is on the curved surface
+            return point.subtract(p0.add(dir.scale(t))).normalize();
+        }
     }
 }
