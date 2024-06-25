@@ -15,7 +15,7 @@ class VectorTests {
      * Test method for {@link primitives.Vector#Vector(double, double, double)}.
      */
     @Test
-    void testConstructor() {
+    void testConstructorWithXYZ() {
         // ============ Equivalence Partitions Tests ==============
         // TC01: Test creating a non-zero vector
         assertDoesNotThrow(() -> new Vector(1, 2, 3), "Failed constructing a non-zero vector");
@@ -24,6 +24,21 @@ class VectorTests {
         // TC10: Test creating a zero vector
         assertThrows(IllegalArgumentException.class, () -> new Vector(0, 0, 0), "Constructed a zero vector");
     }
+
+    /**
+     * Test method for {@link primitives.Vector#Vector(Double3)}.
+     */
+    @Test
+    void testConstructorWithDouble3() {
+        // ============ Equivalence Partitions Tests ==============
+        // TC01: Test creating a non-zero vector with Double3
+        assertDoesNotThrow(() -> new Vector(new Double3(1, 2, 3)), "Failed constructing a non-zero vector with Double3");
+
+        // =============== Boundary Values Tests ==================
+        // TC10: Test creating a zero vector with Double3
+        assertThrows(IllegalArgumentException.class, () -> new Vector(Double3.ZERO), "Constructed a zero vector with Double3");
+    }
+
 
     /**
      * Test method for {@link primitives.Vector#equals(Object)}.
@@ -83,6 +98,8 @@ class VectorTests {
         Vector result = v1.add(v2);
         assertEquals(new Vector(5, 7, 9), result, "add() failed");
     }
+
+    //להוסיף טסט לחיסור
 
     /**
      * Test method for {@link primitives.Vector#scale(double)}.

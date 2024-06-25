@@ -1,13 +1,17 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
+import primitives.Util;
 import primitives.Vector;
+
+import java.util.List;
 
 /**
  * Represents a plane in a 3D space defined by a point and a normal vector.
  * The Plane class provides methods for creating a plane and getting its normal vector.
  */
-public class Plane extends Geometry {
+public class Plane implements Geometry {
 
     /**
      * A point on the plane.
@@ -59,12 +63,6 @@ public class Plane extends Geometry {
         this.normal = cross.normalize();
     }
 
-    /**
-     * Returns the normal vector to the plane at a given point.
-     *
-     * @param point the point at which the normal is to be calculated (ignored in this implementation).
-     * @return the normal vector to the plane.
-     */
     @Override
     public Vector getNormal(Point point) {
         return normal;
@@ -77,5 +75,34 @@ public class Plane extends Geometry {
      */
     public Vector getNormal() {
         return normal;
+    }
+
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        Point p0 = ray.getP0();
+        Vector v = ray.getDir();
+        Vector n = this.getNormal(); // normal to the plane
+        Point q0 = this.point; // a point on the plane
+
+        // if Ray's head is on the plane's reference point
+        if (q0.equals(p0))
+            return null;
+
+        double numerator = n.dotProduct(q0.subtract(p0));
+        double denominator = n.dotProduct(v);
+
+        // if the denominator is 0, the ray is parallel to the plane and there is no intersection
+        if (Util.isZero(denominator)) {
+            return null;
+        }
+
+        double t = numerator / denominator;
+
+        // if t is negative or zero, there is no intersection in the ray's positive direction
+        if (t <= 0) {
+            return null;
+        }
+
+        return List.of(ray.getPoint(t));
     }
 }

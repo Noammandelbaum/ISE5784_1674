@@ -5,6 +5,7 @@ import java.util.List;
 import static primitives.Util.isZero;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
 
 /**
@@ -13,7 +14,7 @@ import primitives.Vector;
  *
  * @author Dan
  */
-public class Polygon extends Geometry {
+public class Polygon implements Geometry {
     /**
      * List of polygon's vertices
      */
@@ -92,4 +93,8 @@ public class Polygon extends Geometry {
         return plane.getNormal();
     }
 
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
+    }
 }

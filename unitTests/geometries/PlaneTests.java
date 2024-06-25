@@ -2,7 +2,10 @@ package geometries;
 
 import org.junit.jupiter.api.Test;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -69,5 +72,46 @@ public class PlaneTests {
         Vector expectedNormal2 = new Vector(0, 0, -1);
         assertTrue(expectedNormal1.equals(normal) || expectedNormal2.equals(normal),
                 "getNormal() wrong result for Plane created with three points");
+    }
+
+    /**
+     * Test method for {@link geometries.Plane#findIntersections(primitives.Ray)}.
+     */
+    @Test
+    void testFindIntersections() {
+
+        Plane plane = new Plane(new Point(1, 0, 0), new Vector(0, 1, 0));
+
+        // ============ Equivalence Partitions Tests ==============
+
+        // TC01: Ray's head is on the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(new Point(1, 0, 1), new Vector(1, 1, 1))),
+                "Ray's head is on the plane");
+
+        // TC02: Ray's head is on the plane's reference point (0 points)
+        assertNull(plane.findIntersections(new Ray(new Point(1, 0, 0), new Vector(1, 1, 1))),
+                "Ray's head is on the plane's reference point");
+
+        // TC03: Ray's line is contained in the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(new Point(1, 0, 1), new Vector(2, 0, 1))),
+                "Ray's line is contained in the plane");
+
+
+        // TC04: Ray's line is parallel to the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(new Point(0, 1, 0), new Vector(1, 0, 0))),
+                "Ray's line is parallel to the plane");
+
+        // TC05: Ray crosses the plane (1 point)
+        Point p = new Point(0, 0, 2);
+        List<Point> result = plane.findIntersections(new Ray(new Point(0, -2, 0), new Vector(0, 1, 1)));
+        assertEquals(1, result.size(), "Wrong number of points");
+        assertEquals(List.of(p), result, "Ray crosses the plane");
+
+        // TC06: A ray crosses the plane and is perpendicular to it  (1 point)
+        p = new Point(0, 0, 1);
+        result = plane.findIntersections(new Ray(new Point(0, -2, 1), new Vector(0, 1, 0)));
+        assertEquals(1, result.size(), "Wrong number of points");
+        assertEquals(List.of(p), result, "Ray crosses the plane");
+
     }
 }

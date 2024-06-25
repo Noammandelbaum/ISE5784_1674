@@ -1,8 +1,6 @@
 package geometries;
 
-import primitives.Point;
-import primitives.Ray;
-import primitives.Vector;
+import primitives.*;
 
 /**
  * Represents a cylinder in a 3D space.
@@ -41,13 +39,14 @@ public class Cylinder extends Tube {
         double t = dir.dotProduct(point.subtract(p0));
 
         // Check if the point is on the top or bottom base
-        if (t <= 0) {
+        if (Util.alignZero(t) <= 0) {
             return dir.scale(-1).normalize();
-        } else if (t >= height) {
+        } else if (Util.alignZero(t - height) >= 0) {
             return dir.normalize();
         } else {
             // Point is on the curved surface
-            return point.subtract(p0.add(dir.scale(t))).normalize();
+            return point.subtract(getAxisRay().getPoint(t)).normalize();
         }
     }
+
 }

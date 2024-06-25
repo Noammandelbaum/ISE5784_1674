@@ -1,6 +1,6 @@
 package primitives;
 
-import java.util.Objects;
+import static primitives.Util.isZero;
 
 /**
  * Represents a ray in 3D space.
@@ -47,6 +47,16 @@ public class Ray {
      */
     public Vector getDir() {
         return dir;
+    }
+
+    /**
+     * Computes a point on the ray at a given distance t from the starting point.
+     *
+     * @param t the distance from the starting point
+     * @return the point on the ray at distance t
+     */
+    public Point getPoint(double t) {
+        return isZero(t) ? p0 : p0.add(dir.scale(t));
     }
 
     /**

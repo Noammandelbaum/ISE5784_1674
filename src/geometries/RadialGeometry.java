@@ -4,7 +4,7 @@ package geometries;
  * The RadialGeometry abstract class represents a circular geometric body.
  * It extends the Geometry class.
  */
-public abstract class RadialGeometry extends Geometry {
+public abstract class RadialGeometry implements Geometry {
 
     /**
      * The radius of the circular radial geometry.

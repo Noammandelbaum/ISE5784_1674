@@ -2,7 +2,10 @@ package geometries;
 
 import org.junit.jupiter.api.Test;
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -39,6 +42,11 @@ public class RadialGeometryTests {
 
         @Override
         public Vector getNormal(Point point) {
+            return null;
+        }
+
+        @Override
+        public List<Point> findIntersections(Ray ray) {
             return null;
         }
     }

@@ -36,21 +36,12 @@ public class Vector extends Point {
             throw new IllegalArgumentException("Vector Zero not allowable");
     }
 
-    /**
-     * Compares two vectors for equality.
-     * @param o the object to be compared for equality with this vector.
-     * @return true if the specified object is equal to this vector; false otherwise.
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         return (o instanceof Vector vec) && super.equals(vec);
     }
 
-    /**
-     * Returns a string representation of the vector.
-     * @return a string representation of the vector.
-     */
     @Override
     public String toString() {
         return "Vector{" +

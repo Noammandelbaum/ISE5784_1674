@@ -2,7 +2,10 @@ package geometries;
 
 import primitives.Point;
 import primitives.Ray;
+import primitives.Util;
 import primitives.Vector;
+
+import java.util.List;
 
 /**
  * Represents a tube in a 3D space.
@@ -27,6 +30,15 @@ public class Tube extends RadialGeometry {
     }
 
     /**
+     * Returns the central axis ray of the tube.
+     *
+     * @return the central axis ray of the tube.
+     */
+    public Ray getAxisRay() {
+        return axisRay;
+    }
+
+    /**
      * Calculates the normal vector to the tube at a given point.
      *
      * @param point the point on the surface of the tube where the normal is to be calculated.
@@ -45,14 +57,15 @@ public class Tube extends RadialGeometry {
         Vector p0ToPoint = point.subtract(p0);
         double t = dir.dotProduct(p0ToPoint);
 
-        if (t == 0) {
+        if (Util.isZero(t)) {
             return p0ToPoint.normalize();
         }
-
-        Point o = p0.add(dir.scale(t));
-        Vector normal = point.subtract(o);
-
-        return normal.normalize();
+        
+        return point.subtract(axisRay.getPoint(t)).normalize();
     }
 
+    @Override
+    public List<Point> findIntersections(Ray ray) {
+        return null;
+    }
 }
