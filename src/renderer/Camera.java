@@ -1,5 +1,6 @@
 package renderer;
 
+import primitives.Color;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
@@ -20,6 +21,9 @@ public class Camera implements Cloneable {
     private double width = 0.0;
     private double height = 0.0;
     private double distance = 0.0;
+
+    private ImageWriter imageWriter;
+    private RayTracerBase rayTracer;
 
     // Getters
     public Vector getvUp() {
@@ -59,25 +63,6 @@ public class Camera implements Cloneable {
         return new Builder();
     }
 
-//    /**
-//     * Camera constructor with position and direction vectors.
-//     *
-//     * @param p0  the position of the camera
-//     * @param vTo the direction vector towards the view plane
-//     * @param vUp the direction vector upwards
-//     * @throws IllegalArgumentException if vTo and vUp are not orthogonal
-//     */
-//    public Camera(Point p0, Vector vTo, Vector vUp) throws IllegalArgumentException {
-//        if (!isZero(vTo.dotProduct(vUp))) {
-//            throw new IllegalArgumentException("vUp and vTo are not orthogonal");
-//        }
-//        this.p0 = p0;
-//        this.vUp = vUp.normalize();
-//        this.vTo = vTo.normalize();
-//        this.vRight = vTo.crossProduct(vUp).normalize();
-//    }
-
-
     /**
      * Constructs a ray from the camera through a pixel (i, j).
      *
@@ -100,6 +85,62 @@ public class Camera implements Cloneable {
         if (!isZero(yI)) pIJ = pIJ.add(vUp.scale(yI));
 
         return new Ray(p0, pIJ.subtract(p0));
+    }
+
+    /**
+     * Renders the image by casting rays through each pixel and computing the color.
+     * @return the Camera object itself for chaining
+     */
+    public Camera renderImage() {
+        int nx = imageWriter.getNx();
+        int ny = imageWriter.getNy();
+
+        for (int i = 0; i < ny; i++) {
+            for (int j = 0; j < nx; j++) {
+                castRay(nx, ny, j, i);
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Casts a ray through the center of the specified pixel, computes the color of the ray,
+     * and writes the color to the pixel.
+     *
+     * @param nx number of pixels in the x direction
+     * @param ny number of pixels in the y direction
+     * @param j  the x coordinate of the pixel
+     * @param i  the y coordinate of the pixel
+     */
+    private void castRay(int nx, int ny, int j, int i) {
+        imageWriter.writePixel(j, i, rayTracer.traceRay(constructRay(nx, ny, j, i)));
+    }
+
+    /**
+     * Prints a grid over the rendered image.
+     * @return the Camera object itself for chaining
+     * @param interval the interval between grid lines
+     * @param color    the color of the grid lines
+     */
+    public Camera printGrid(int interval, Color color) {
+        int nx = imageWriter.getNx();
+        int ny = imageWriter.getNy();
+
+        for (int i = 0; i < ny; i++) {
+            for (int j = 0; j < nx; j++) {
+                if (i % interval == 0 || j % interval == 0) {
+                    imageWriter.writePixel(j, i, color);
+                }
+            }
+        }
+        return this;
+    }
+
+    /**
+     * Writes the image to a file.
+     */
+    public void writeToImage() {
+        imageWriter.writeToImage();
     }
 
     /**
@@ -192,6 +233,36 @@ public class Camera implements Cloneable {
             return this;
         }
 
+        /**
+         * Sets the ImageWriter for the camera.
+         *
+         * @param imageWriter the ImageWriter object
+         * @return the Builder object itself
+         * @throws IllegalArgumentException if the imageWriter is null
+         */
+        public Builder setImageWriter(ImageWriter imageWriter) {
+            if (imageWriter == null) {
+                throw new IllegalArgumentException("imageWriter cannot be null");
+            }
+            camera.imageWriter = imageWriter;
+            return this;
+        }
+
+        /**
+         * Sets the RayTracer for the camera.
+         *
+         * @param rayTracer the RayTracerBase object
+         * @return the Builder object itself
+         * @throws IllegalArgumentException if the rayTracer is null
+         */
+        public Builder setRayTracer(RayTracerBase rayTracer) {
+            if (rayTracer == null) {
+                throw new IllegalArgumentException("rayTracer cannot be null");
+            }
+            camera.rayTracer = rayTracer;
+            return this;
+        }
+
 
         /**
          * Builds the Camera object after checking that all necessary fields are set.
@@ -221,6 +292,12 @@ public class Camera implements Cloneable {
             }
             if (camera.p0 == null) {
                 throw new MissingResourceException(MISSING_RESOURCE_MESSAGE, CAMERA_CLASS_NAME, "p0");
+            }
+            if (camera.imageWriter == null) {
+                throw new MissingResourceException(MISSING_RESOURCE_MESSAGE, CAMERA_CLASS_NAME, "imageWriter");
+            }
+            if (camera.rayTracer == null) {
+                throw new MissingResourceException(MISSING_RESOURCE_MESSAGE, CAMERA_CLASS_NAME, "rayTracer");
             }
 
             // Check for invalid values
