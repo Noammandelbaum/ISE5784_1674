@@ -1,6 +1,7 @@
 package geometries;
 
 import primitives.*;
+import geometries.Intersectable.GeoPoint;
 
 import java.util.List;
 
@@ -25,14 +26,14 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         // Step 1: Find intersection with the plane of the triangle
-        List<Point> planeIntersections = plane.findIntersections(ray);
-        if (planeIntersections == null) {
+        List<GeoPoint> planeGeoIntersections = plane.findGeoIntersectionsHelper(ray);
+        if (planeGeoIntersections == null) {
             return null; // The ray does not intersect the plane
         }
 
-        Point p = planeIntersections.getFirst();
+        Point p = planeGeoIntersections.getFirst().point;
 
         // Step 2: Check if the intersection point is inside the triangle
         Point p0 = ray.getP0();
@@ -57,7 +58,7 @@ public class Triangle extends Polygon {
 
         // If all have the same sign, the point is inside the triangle
         if (compareSign(sign1, sign2) && compareSign(sign1, sign3)) {
-            return List.of(p);
+            return List.of(new GeoPoint(this, p));
         }
 
         return null; // The intersection point is outside the triangle

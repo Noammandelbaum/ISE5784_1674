@@ -11,13 +11,14 @@ import java.util.List;
  * Represents a collection of geometric shapes.
  * This class implements the Composite design pattern.
  */
-public class Geometries implements Intersectable {
+public class Geometries extends Intersectable {
     private final List<Intersectable> geometries = new LinkedList<>();
 
     /**
      * Default constructor (empty)
      */
-    public Geometries() {}
+    public Geometries() {
+    }
 
     /**
      * Constructor that initializes the list of geometries with the given geometries.
@@ -47,19 +48,19 @@ public class Geometries implements Intersectable {
     }
 
     @Override
-        public List<Point> findIntersections(Ray ray) {
-            List<Point> intersections = null;
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
+        List<GeoPoint> intersections = null;
 
-            for (Intersectable geometry : geometries) {
-                List<Point> geometryIntersections = geometry.findIntersections(ray);
-                if (geometryIntersections != null) {
-                    if (intersections == null) {
-                        intersections = new LinkedList<>(); // Create list only when first intersection is found
-                    }
-                    intersections.addAll(geometryIntersections);
+        for (Intersectable geometry : geometries) {
+            List<GeoPoint> geoIntersections = geometry.findGeoIntersectionsHelper(ray);
+            if (geoIntersections != null) {
+                if (intersections == null) {
+                    intersections = new LinkedList<>(); // Create list only when first intersection is found
                 }
+                intersections.addAll(geoIntersections);
             }
-
-            return intersections; // If no intersections were found, this will return null
         }
+
+        return intersections; // If no intersections were found, this will return null
     }
+}

@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
+import geometries.Intersectable.GeoPoint;
 
 import java.util.List;
 
@@ -46,7 +47,7 @@ public class RadialGeometryTests {
         }
 
         @Override
-        public List<Point> findIntersections(Ray ray) {
+        protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
             return null;
         }
     }

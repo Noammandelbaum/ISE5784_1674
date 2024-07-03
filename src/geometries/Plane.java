@@ -4,6 +4,7 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Util;
 import primitives.Vector;
+import geometries.Intersectable.GeoPoint;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * Represents a plane in a 3D space defined by a point and a normal vector.
  * The Plane class provides methods for creating a plane and getting its normal vector.
  */
-public class Plane implements Geometry {
+public class Plane extends Geometry {
 
     /**
      * A point on the plane.
@@ -78,7 +79,7 @@ public class Plane implements Geometry {
     }
 
     @Override
-    public List<Point> findIntersections(Ray ray) {
+    protected List<GeoPoint> findGeoIntersectionsHelper(Ray ray) {
         Point p0 = ray.getP0();
         Vector v = ray.getDir();
         Vector n = this.getNormal(); // normal to the plane
@@ -102,7 +103,6 @@ public class Plane implements Geometry {
         if (t <= 0) {
             return null;
         }
-
-        return List.of(ray.getPoint(t));
+        return List.of(new GeoPoint(this, ray.getPoint(t)));
     }
 }

@@ -1,5 +1,9 @@
 package primitives;
 
+import geometries.Intersectable.GeoPoint;
+
+import java.util.List;
+
 import static primitives.Util.isZero;
 
 /**
@@ -60,6 +64,39 @@ public class Ray {
     }
 
     /**
+     * Finds the closest point to the ray's starting point from a list of points.
+     *
+     * @param points the list of points
+     * @return the closest point to the ray's starting point, or null if the list is empty
+     */
+    public Point findClosestPoint(List<Point> points) {
+        return points == null || points.isEmpty() ? null : findClosestGeoPoint(points.stream().map(p -> new GeoPoint(null, p)).toList()).point;
+    }
+
+    /**
+     * Finds the closest GeoPoint from a list of GeoPoints to the ray's origin.
+     *
+     * @param geoPoints List of GeoPoints to check
+     * @return The closest GeoPoint to the ray's origin, or null if the list is empty
+     */
+    public GeoPoint findClosestGeoPoint(List<GeoPoint> geoPoints) {
+        if (geoPoints == null || geoPoints.isEmpty()) {
+            return null;
+        }
+        GeoPoint closestPoint = null;
+        double closestDistance = Double.MAX_VALUE;
+
+        for (GeoPoint geoPoint : geoPoints) {
+            double distance = p0.distance(geoPoint.point);
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestPoint = geoPoint;
+            }
+        }
+        return closestPoint;
+    }
+
+    /**
      * Checks if this ray is equal to another object.
      *
      * @param o the object to compare with this ray.
@@ -78,9 +115,6 @@ public class Ray {
      */
     @Override
     public String toString() {
-        return "Ray{" +
-                "p0=" + p0 +
-                ", dir=" + dir +
-                '}';
+        return "Ray{" + "p0=" + p0 + ", dir=" + dir + '}';
     }
 }

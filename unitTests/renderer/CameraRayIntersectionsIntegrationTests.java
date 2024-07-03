@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import primitives.Point;
 import primitives.Vector;
 import geometries.*;
+import scene.Scene;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -14,6 +15,8 @@ public class CameraRayIntersectionsIntegrationTests {
 
     // Initialize the camera for some sphere tests
     private final Camera cameraForSphere = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(new Scene("Test")))
+            .setImageWriter(new ImageWriter("Test", 3, 3))
             .setLocation(new Point(0, 0, 0.5)) // Camera location updated to (0,0,0.5) for some sphere tests
             .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setVPDistance(1)
@@ -22,6 +25,8 @@ public class CameraRayIntersectionsIntegrationTests {
 
     // Initialize the camera for other tests (default location at (0, 0, 0))
     private final Camera camera = Camera.getBuilder()
+            .setRayTracer(new SimpleRayTracer(new Scene("Test")))
+            .setImageWriter(new ImageWriter("Test", 3, 3))
             .setLocation(Point.ZERO) // Camera location at (0,0,0)
             .setDirection(new Vector(0, 0, -1), new Vector(0, 1, 0))
             .setVPDistance(1)
