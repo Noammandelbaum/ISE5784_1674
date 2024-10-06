@@ -34,6 +34,16 @@ public class Point {
     }
 
     /**
+     * Copy constructor for Point.
+     * Creates a new Point with the same coordinates as the given Point.
+     *
+     * @param other the Point to copy
+     */
+    public Point(Point other) {
+        this._xyz = new Double3(other._xyz);
+    }
+
+    /**
      * Compares two points for equality.
      *
      * @param o the object to be compared for equality with this point.

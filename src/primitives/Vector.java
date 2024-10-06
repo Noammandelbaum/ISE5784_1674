@@ -36,6 +36,20 @@ public class Vector extends Point {
             throw new IllegalArgumentException("Vector Zero not allowable");
     }
 
+    /**
+     * Copy constructor for Vector.
+     * Creates a new Vector with the same coordinates as the given Vector.
+     *
+     * @param other the Vector to copy
+     */
+    public Vector(Vector other) {
+        super(other._xyz);
+        if (other._xyz.equals(Double3.ZERO)) {
+            throw new IllegalArgumentException("Vector Zero not allowable");
+        }
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

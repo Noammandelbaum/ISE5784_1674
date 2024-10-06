@@ -45,6 +45,19 @@ public class Double3 {
         this.d3 = value;
     }
 
+    /**
+     * Copy constructor for Double3.
+     * Creates a new Double3 with the same values as the given Double3.
+     *
+     * @param other the Double3 to copy
+     */
+    public Double3(Double3 other) {
+        d1 = other.d1;
+        d2 = other.d2;
+        d3 = other.d3;
+    }
+
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) return true;

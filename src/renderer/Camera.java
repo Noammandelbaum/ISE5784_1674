@@ -15,6 +15,7 @@ import static primitives.Util.isZero;
  */
 public class Camera implements Cloneable {
     private Point p0;
+    private Point VPCenter;
     private Vector vUp;
     private Vector vTo;
     private Vector vRight;
@@ -73,7 +74,7 @@ public class Camera implements Cloneable {
      * @return the constructed ray
      */
     public Ray constructRay(int nX, int nY, int j, int i) {
-        Point pc = p0.add(vTo.scale(distance)); // Center point of the view plane
+        Point pc = this.VPCenter; // Center point of the view plane
         double Ry = height / nY; // Pixel height
         double Rx = width / nX; // Pixel width
 
@@ -142,6 +143,18 @@ public class Camera implements Cloneable {
     public void writeToImage() {
         imageWriter.writeToImage();
     }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Camera cloned = (Camera) super.clone();
+        cloned.p0 = new Point(this.p0);
+        cloned.VPCenter = new Point(this.VPCenter);
+        cloned.vUp = new Vector(this.vUp);
+        cloned.vTo = new Vector(this.vTo);
+        cloned.vRight = new Vector(this.vRight);
+        return cloned;
+    }
+
 
     /**
      * Inner static Builder class for constructing Camera objects.
@@ -306,6 +319,7 @@ public class Camera implements Cloneable {
             }
 
             camera.vRight = camera.vTo.crossProduct(camera.vUp).normalize();
+            camera.VPCenter = camera.p0.add(camera.vTo.scale(camera.distance));
             try {
                 return (Camera) camera.clone();
             } catch (CloneNotSupportedException e) {

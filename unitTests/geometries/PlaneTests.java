@@ -84,34 +84,47 @@ public class PlaneTests {
 
         // ============ Equivalence Partitions Tests ==============
 
-        // TC01: Ray's head is on the plane (0 points)
-        assertNull(plane.findIntersections(new Ray(new Point(1, 0, 1), new Vector(1, 1, 1))),
-                "Ray's head is on the plane");
+        // TC01: Ray intersects the plane (1 point)
+        Point p1 = new Point(0, 0, 2);
+        List<Point> result1 = plane.findIntersections(new Ray(new Point(0, -2, 0), new Vector(0, 1, 1)));
+        assertEquals(1, result1.size(), "Wrong number of points");
+        assertEquals(List.of(p1), result1, "Ray intersects the plane");
 
-        // TC02: Ray's head is on the plane's reference point (0 points)
-        assertNull(plane.findIntersections(new Ray(new Point(1, 0, 0), new Vector(1, 1, 1))),
-                "Ray's head is on the plane's reference point");
-
-        // TC03: Ray's line is contained in the plane (0 points)
-        assertNull(plane.findIntersections(new Ray(new Point(1, 0, 1), new Vector(2, 0, 1))),
-                "Ray's line is contained in the plane");
+        // TC02: Ray does not intersect the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(new Point(2, -2, 0), new Vector(0, -1, 1))),
+                "Ray does not intersect the plane");
 
 
-        // TC04: Ray's line is parallel to the plane (0 points)
+        // =============== Boundary Values Tests ==================
+
+        // TC10: Ray is parallel to the plane and not included in the plane (0 points)
         assertNull(plane.findIntersections(new Ray(new Point(0, 1, 0), new Vector(1, 0, 0))),
-                "Ray's line is parallel to the plane");
+                "Ray is parallel to the plane and not included in the plane");
 
-        // TC05: Ray crosses the plane (1 point)
-        Point p = new Point(0, 0, 2);
-        List<Point> result = plane.findIntersections(new Ray(new Point(0, -2, 0), new Vector(0, 1, 1)));
-        assertEquals(1, result.size(), "Wrong number of points");
-        assertEquals(List.of(p), result, "Ray crosses the plane");
+        // TC11: Ray is parallel to the plane and included in the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(new Point(0, 0, 0), new Vector(1, 0, 0))),
+                "Ray is parallel to the plane and included in the plane");
 
-        // TC06: A ray crosses the plane and is perpendicular to it  (1 point)
-        p = new Point(0, 0, 1);
-        result = plane.findIntersections(new Ray(new Point(0, -2, 1), new Vector(0, 1, 0)));
-        assertEquals(1, result.size(), "Wrong number of points");
-        assertEquals(List.of(p), result, "Ray crosses the plane");
+        // TC12: Ray is orthogonal to the plane and starts before the plane (1 point)
+        Point p3 = new Point(1, 0, 0);
+        List<Point> result3 = plane.findIntersections(new Ray(new Point(1, -1, 0), new Vector(0, 1, 0)));
+        assertEquals(1, result3.size(), "Wrong number of points");
+        assertEquals(List.of(p3), result3, "Ray is orthogonal to the plane and starts before the plane");
 
+        // TC13: Ray is orthogonal to the plane and starts in the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(new Point(1, 0, 0), new Vector(0, 1, 0))),
+                "Ray is orthogonal to the plane and starts in the plane");
+
+        // TC14: Ray is orthogonal to the plane and starts after the plane (0 points)
+        assertNull(plane.findIntersections(new Ray(new Point(1, 1, 0), new Vector(0, 1, 0))),
+                "Ray is orthogonal to the plane and starts after the plane");
+
+        // TC15: Ray is neither orthogonal nor parallel to the plane and begins at the plane (P0 is in the plane but not the ray) (0 points)
+        assertNull(plane.findIntersections(new Ray(new Point(1, 0, 0), new Vector(1, 1, 1))),
+                "Ray is neither orthogonal nor parallel to the plane and begins at the plane");
+
+        // TC16: Ray is neither orthogonal nor parallel to the plane and begins in the same point which appears as reference point in the plane (Q) (0 points)
+        assertNull(plane.findIntersections(new Ray(new Point(1, 0, 0), new Vector(1, 0, 1))),
+                "Ray is neither orthogonal nor parallel to the plane and begins in the same point which appears as reference point in the plane (Q)");
     }
 }

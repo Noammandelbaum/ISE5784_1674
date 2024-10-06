@@ -28,7 +28,7 @@ bin/
 ### Mac OS ###
 .DS_Store
 
-
+javaDocumentation/
 .idea/
 lib/
 images/
