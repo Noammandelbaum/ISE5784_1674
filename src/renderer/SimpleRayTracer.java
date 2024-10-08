@@ -16,6 +16,12 @@ import static primitives.Util.alignZero;
 public class SimpleRayTracer extends RayTracerBase {
 
     /**
+     * A constant value for shadow rays starting point offset.
+     */
+    private static final double DELTA = 0.1;
+
+
+    /**
      * Constructor that initializes the simple ray tracer with a scene.
      *
      * @param scene the scene to be rendered
@@ -34,6 +40,14 @@ public class SimpleRayTracer extends RayTracerBase {
         return calcColor(geoPoint, ray);
     }
 
+    /**
+     * Calculates the color at a given GeoPoint, considering ambient light, emission,
+     * and local lighting effects (including shadows).
+     *
+     * @param geoPoint The point on the geometry where the color is calculated.
+     * @param ray      The ray that hits the geometry.
+     * @return The calculated color at the GeoPoint.
+     */
     private Color calcColor(GeoPoint geoPoint, Ray ray) {
         return scene.ambientLight.getIntensity()        // the intensity of the ambient light
                 .add(geoPoint.geometry.getEmission())   // the intensity of the geometry
@@ -62,15 +76,14 @@ public class SimpleRayTracer extends RayTracerBase {
             double nl = alignZero(n.dotProduct(l)); // nl is the dot product of the normal and the light direction
 
             // Check if the light source and the view direction are on the same side of the surface
-            if (nl * nv > 0) {
+            if (nl * nv > 0 && unshaded(geoPoint, lightSource, l, n, nl)) {
                 Color lightIntensity = lightSource.getIntensity(geoPoint.point);
-                Color diffuse = calcDiffuse(material.kD, nl, lightIntensity);
-                Color specular = calcSpecular(material.kS, l, n, nl, v, material.nShininess, lightIntensity);
 
-                // Add the diffuse and specular components to the color
-                color = color.add(diffuse, specular);
+                color = color.add(calcDiffuse(material.kD, nl, lightIntensity),
+                        calcSpecular(material.kS, l, n, nl, v, material.nShininess, lightIntensity));
             }
         }
+
         return color; // Return the calculated color
     }
 
@@ -105,6 +118,45 @@ public class SimpleRayTracer extends RayTracerBase {
             return Color.BLACK; // vr should be negative
         }
         return lightIntensity.scale(kS).scale(Math.pow(-vr, nShininess));
+    }
+
+    /**
+     * Checks if a point is unshaded by any objects between the point and the light source.
+     *
+     * @param gp    The GeoPoint on the geometry.
+     * @param light The light source.
+     * @param l     The vector from the light source to the hit point.
+     * @param n     The normal vector to the surface at the hit point.
+     * @param nl    The dot product of the normal vector and the vector l.
+     * @return True if the point is unshaded (no objects block the light), false otherwise.
+     */
+    private boolean unshaded(GeoPoint gp, LightSource light, Vector l, Vector n, double nl) {
+        Vector lightDirection = l.scale(-1); // Direction from the point to the light source
+        Vector epsVector = n.scale(nl < 0 ? DELTA : -DELTA); // Small offset to avoid self-intersection
+        Point point = gp.point.add(epsVector); // Slightly move the point along the normal
+
+        // Create a ray from the point towards the light source
+        Ray lightRay = new Ray(point, lightDirection);
+
+        // Find intersections between the ray and the geometries
+        List<GeoPoint> intersections = scene.geometries.findGeoIntersections(lightRay);
+
+        // If no intersections, the point is unshaded
+        if (intersections == null) {
+            return true;
+        }
+
+        // Get the distance to the light source
+        double lightDistance = light.getDistance(point);
+
+        // Check if any intersection is closer to the point than the light source
+        for (GeoPoint intersection : intersections) {
+            if (intersection.point.distance(point) <= lightDistance) {
+                return false; // The point is in shadow
+            }
+        }
+
+        return true; // No intersections closer than the light source, point is unshaded
     }
 
 }
