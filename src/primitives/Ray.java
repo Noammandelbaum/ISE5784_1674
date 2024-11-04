@@ -22,6 +22,8 @@ public class Ray {
      */
     private final Vector dir;
 
+    private static final double DELTA = 0.1;
+
     /**
      * Constructs a new ray with the given starting point and direction vector.
      * The direction vector is normalized.
@@ -32,6 +34,24 @@ public class Ray {
     public Ray(Point p0, Vector dir) {
         this.p0 = p0;
         this.dir = dir.normalize();
+    }
+
+    /**
+     * Constructs a new ray with the starting point adjusted along the given normal.
+     *
+     * @param point     The original starting point of the ray.
+     * @param direction The direction vector of the ray.
+     * @param normal    The normal vector for direction adjustment.
+     */
+    public Ray(Point point, Vector direction, Vector normal) {
+        double vn = normal.dotProduct(direction);
+        if (!isZero(vn)) {
+            // Adjust the point along the normal using the DELTA constant
+            point = point.add(normal.scale((vn < 0) ? -DELTA : DELTA));
+        }
+
+        this.p0 = point;
+        this.dir = direction.normalize();
     }
 
 
